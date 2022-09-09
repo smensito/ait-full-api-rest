@@ -1,18 +1,18 @@
 const Joi = require('joi');
 const { password, objectId } = require('./custom.validation');
 
-const createUser = {
+const createTraining = {
   body: Joi.object().keys({
     email: Joi.string().required().email(),
     password: Joi.string().required().custom(password),
-    username: Joi.string().required(),
-    role: Joi.string().required().valid('user', 'admin'),
+    trainingname: Joi.string().required(),
+    role: Joi.string().required().valid('training', 'admin'),
   }),
 };
 
-const getUsers = {
+const getTrainings = {
   query: Joi.object().keys({
-    username: Joi.string(),
+    training: Joi.string(),
     role: Joi.string(),
     sortBy: Joi.string(),
     limit: Joi.number().integer(),
@@ -20,35 +20,35 @@ const getUsers = {
   }),
 };
 
-const getUser = {
+const getTraining = {
   params: Joi.object().keys({
-    userId: Joi.string().custom(objectId),
+    trainingId: Joi.string().custom(objectId),
   }),
 };
 
-const updateUser = {
+const updateTraining = {
   params: Joi.object().keys({
-    userId: Joi.required().custom(objectId),
+    trainingId: Joi.required().custom(objectId),
   }),
   body: Joi.object()
     .keys({
       email: Joi.string().email(),
       password: Joi.string().custom(password),
-      username: Joi.string(),
+      trainingname: Joi.string(),
     })
     .min(1),
 };
 
-const deleteUser = {
+const deleteTraining = {
   params: Joi.object().keys({
-    userId: Joi.string().custom(objectId),
+    trainingId: Joi.string().custom(objectId),
   }),
 };
 
 module.exports = {
-  createUser,
-  getUsers,
-  getUser,
-  updateUser,
-  deleteUser,
+  createTraining,
+  getTrainings,
+  getTraining,
+  updateTraining,
+  deleteTraining,
 };

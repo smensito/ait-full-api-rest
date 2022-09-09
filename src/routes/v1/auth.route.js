@@ -20,7 +20,7 @@ module.exports = router;
 /**
  * @swagger
  * tags:
- *   name: Auth
+ *   username: Auth
  *   description: Authentication
  */
 
@@ -37,11 +37,11 @@ module.exports = router;
  *           schema:
  *             type: object
  *             required:
- *               - name
+ *               - username
  *               - email
  *               - password
  *             properties:
- *               name:
+ *               username:
  *                 type: string
  *               email:
  *                 type: string
@@ -53,7 +53,7 @@ module.exports = router;
  *                 minLength: 8
  *                 description: At least one number and one letter
  *             example:
- *               name: fake name
+ *               username: fake username
  *               email: fake@example.com
  *               password: password1
  *     responses:
@@ -212,7 +212,7 @@ module.exports = router;
  *     tags: [Auth]
  *     parameters:
  *       - in: query
- *         name: token
+ *         username: token
  *         required: true
  *         schema:
  *           type: string
@@ -271,7 +271,7 @@ module.exports = router;
  *     tags: [Auth]
  *     parameters:
  *       - in: query
- *         name: token
+ *         username: token
  *         required: true
  *         schema:
  *           type: string
