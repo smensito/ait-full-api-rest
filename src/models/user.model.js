@@ -3,7 +3,6 @@ const validator = require('validator');
 const bcrypt = require('bcryptjs');
 const { toJSON, paginate } = require('./plugins');
 const { roles } = require('../config/roles');
-const { basicInfo } = require('./basicInfo.model');
 
 const userSchema = mongoose.Schema(
   {
@@ -39,13 +38,42 @@ const userSchema = mongoose.Schema(
     role: {
       type: String,
       enum: roles,
-      default: 'player',
+      default: roles.player,
     },
     isEmailVerified: {
       type: Boolean,
       default: false,
     },
-    basicInfo,
+    basicInfo: {
+      name: { type: String, lowercase: true },
+      surname: { type: String, lowercase: true },
+      nickname: { type: String, lowercase: true },
+      birthday: { type: Date, lowercase: true },
+      contactInfo: {
+        phoneNumber: {
+          type: String,
+          required: false,
+          trim: true,
+        },
+        address: {
+          type: String,
+          required: false,
+          trim: true,
+        },
+      },
+      default: {
+        basicInfo: {
+          name: '',
+          surname: '',
+          nickname: '',
+          birthday: '',
+          contactInfo: {
+            phoneNumber: '',
+            address: '',
+          },
+        },
+      },
+    },
   },
   {
     timestamps: true,

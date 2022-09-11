@@ -1,6 +1,7 @@
 const httpStatus = require('http-status');
-const { User } = require('../models');
 const ApiError = require('../utils/ApiError');
+
+const { User } = require('../models');
 
 /**
  * Create a user
@@ -79,6 +80,25 @@ const deleteUserById = async (userId) => {
   return user;
 };
 
+/**
+ * Update user basic info by id
+ * @param {ObjectId} userId
+ * @param {Object} updateBody
+ * @returns {Promise<User>}
+ */
+const updateBasicInfoById = async (userId, updateBody) => {
+  const user = await getUserById(userId);
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+  }
+  if (updateBody.email && (await User.isEmailTaken(updateBody.email, userId))) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
+  }
+  Object.assign(user, updateBody);
+  await user.save();
+  return user;
+};
+
 module.exports = {
   createUser,
   queryUsers,
@@ -86,4 +106,5 @@ module.exports = {
   getUserByEmail,
   updateUserById,
   deleteUserById,
+  updateBasicInfoById,
 };

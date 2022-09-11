@@ -1,20 +1,18 @@
 [
   {
-    "_id": "1234",
-    "username": "aniironen",
-    "password": "123456",
-    "email": "alberto.niironen@gmail.com",
-    "role": "player",
-    "isEmailVerified": "true",
+    "_id": { "$oid": "631e146aeff95c098f26b0ce" },
+    "isEmailVerified": false,
+    "username": "aniironen5@gmail.com",
+    "email": "aniironen5@gmail.com",
+    "password": "$2a$08$9QnxYAqwOl5yktne76LqtO0zllggWW4II.pjuV5jV6rfxfhgeafJG",
+    "createdAt": { "$date": { "$numberLong": "1662915690776" } },
+    "updatedAt": { "$date": { "$numberLong": "1662915740543" } },
+    "__v": { "$numberInt": "0" },
     "basicInfo": {
-      "name": "Alberto",
-      "surname": "Niironen",
-      "nickname": "Nino",
-      "birthday": "1994-03-15T23:59:59.419Z",
-      "contactInfo": {
-        "phoneNumber": "651379396",
-        "address": "Calle los varistas"
-      }
+      "name": "alberto",
+      "surname": "niironen",
+      "nickname": "nino",
+      "birthday": { "$date": { "$numberLong": "763775999999" } }
     }
   }
 ]

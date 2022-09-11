@@ -17,6 +17,10 @@ router
   .patch(auth('manageUsers'), validate(userValidation.updateUser), userController.updateUser)
   .delete(auth('manageUsers'), validate(userValidation.deleteUser), userController.deleteUser);
 
+router
+  .route('/basic-info/:userId')
+  .patch(auth('manageUsers'), validate(userValidation.updateUserBasicInfo), userController.updateBasicInfoById);
+
 module.exports = router;
 
 /**

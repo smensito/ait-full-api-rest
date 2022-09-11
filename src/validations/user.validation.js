@@ -45,10 +45,27 @@ const deleteUser = {
   }),
 };
 
+const updateUserBasicInfo = {
+  params: Joi.object().keys({
+    userId: Joi.required().custom(objectId),
+  }),
+  body: Joi.object()
+    .keys({
+      basicInfo: {
+        name: Joi.string(),
+        surname: Joi.string(),
+        nickname: Joi.string(),
+        birthday: Joi.date(),
+      },
+    })
+    .min(1),
+};
+
 module.exports = {
   createUser,
   getUsers,
   getUser,
   updateUser,
   deleteUser,
+  updateUserBasicInfo,
 };

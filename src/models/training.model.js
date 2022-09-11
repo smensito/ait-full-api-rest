@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
 
-const { user } = require('./user.model');
+const userId = mongoose.Types.ObjectId;
 
 const trainingSchema = mongoose.Schema({
-  players: [{ user }],
+  players: [{ type: userId, ref: 'User' }],
   feedback: {
     type: String,
     required: true,
