@@ -1,6 +1,7 @@
 const httpStatus = require('http-status');
 const { Training } = require('../models');
 const ApiError = require('../utils/ApiError');
+// const logger = require('../config/logger');
 
 /**
  * Create new training
@@ -72,8 +73,8 @@ const deleteTrainingById = async (trainingId) => {
   if (!training) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Training not found');
   }
-  await trainingId.remove();
-  return trainingId;
+  await training.remove();
+  return training;
 };
 
 module.exports = {

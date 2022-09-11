@@ -3,14 +3,16 @@ const pick = require('../utils/pick');
 const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
 const { trainingService } = require('../services');
+const logger = require('../config/logger');
 
 const createTraining = catchAsync(async (req, res) => {
+  logger.info(req.body);
   const training = await trainingService.createTraining(req.body);
   res.status(httpStatus.CREATED).send(training);
 });
 
 const getTrainings = catchAsync(async (req, res) => {
-  const filter = pick(req.query, ['username', 'role']);
+  const filter = pick(req.query, ['date']);
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
   const result = await trainingService.queryTrainings(filter, options);
   res.send(result);

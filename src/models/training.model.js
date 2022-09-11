@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { toJSON, paginate } = require('./plugins');
 
 const userId = mongoose.Types.ObjectId;
 
@@ -6,7 +7,7 @@ const trainingSchema = mongoose.Schema({
   players: [{ type: userId, ref: 'User' }],
   feedback: {
     type: String,
-    required: true,
+    required: false,
     trim: true,
   },
   date: {
@@ -25,6 +26,10 @@ trainingSchema.statics.existsTraining = async function (date) {
   const training = await this.findOne({ date });
   return !!training;
 };
+
+// add plugin that converts mongoose to json
+trainingSchema.plugin(toJSON);
+trainingSchema.plugin(paginate);
 
 /**
  * @typedef Training

@@ -1,18 +1,26 @@
 [
   {
-    "_id": { "$oid": "631e146aeff95c098f26b0ce" },
-    "isEmailVerified": false,
-    "username": "aniironen5@gmail.com",
-    "email": "aniironen5@gmail.com",
-    "password": "$2a$08$9QnxYAqwOl5yktne76LqtO0zllggWW4II.pjuV5jV6rfxfhgeafJG",
-    "createdAt": { "$date": { "$numberLong": "1662915690776" } },
-    "updatedAt": { "$date": { "$numberLong": "1662915740543" } },
-    "__v": { "$numberInt": "0" },
     "basicInfo": {
       "name": "alberto",
       "surname": "niironen",
       "nickname": "nino",
-      "birthday": { "$date": { "$numberLong": "763775999999" } }
-    }
+      "birthday": "1994-03-15T23:59:59.999Z"
+    },
+    "isEmailVerified": false,
+    "username": "aniironen5@gmail.com",
+    "email": "aniironen5@gmail.com",
+    "id": "631e146aeff95c098f26b0ce"
+  },
+  {
+    "basicInfo": {
+      "name": "alberto",
+      "surname": "niironen",
+      "nickname": "nino",
+      "birthday": "1994-03-15T23:59:59.999Z"
+    },
+    "isEmailVerified": false,
+    "username": "aniironen1@gmail.com",
+    "email": "aniironen1@gmail.com",
+    "id": "631e1aeb8f0ef9277cd8fbbe"
   }
 ]

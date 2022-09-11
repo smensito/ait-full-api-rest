@@ -1,38 +1,38 @@
 const express = require('express');
 const auth = require('../../middlewares/auth');
 const validate = require('../../middlewares/validate');
-const userValidation = require('../../validations/user.validation');
-const userController = require('../../controllers/user.controller');
+const trainingValidation = require('../../validations/training.validation');
+const trainingController = require('../../controllers/training.controller');
 
 const router = express.Router();
 
 router
   .route('/')
-  .post(auth('manageTraining'), validate(userValidation.createUser), userController.createUser)
-  .get(auth('getTrainings'), validate(userValidation.getUsers), userController.getUsers);
+  .post(auth('manageTraining'), validate(trainingValidation.createTraining), trainingController.createTraining)
+  .get(auth('getTrainings'), validate(trainingValidation.getTrainings), trainingController.getTrainings);
 
 router
   .route('/:trainingId')
-  .get(auth('getTrainings'), validate(userValidation.getUser), userController.getUser)
-  .patch(auth('manageTrainings'), validate(userValidation.updateUser), userController.updateUser)
-  .delete(auth('manageTrainings'), validate(userValidation.deleteUser), userController.deleteUser);
+  .get(auth('getTrainings'), validate(trainingValidation.getTraining), trainingController.getTraining)
+  .patch(auth('manageTrainings'), validate(trainingValidation.updateTraining), trainingController.updateTraining)
+  .delete(auth('manageTrainings'), validate(trainingValidation.deleteTraining), trainingController.deleteTraining);
 
 module.exports = router;
 
 /**
  * @swagger
  * tags:
- *   username: Users
- *   description: User management and retrieval
+ *   trainingname: Trainings
+ *   description: Training management and retrieval
  */
 
 /**
  * @swagger
- * /users:
+ * /trainings:
  *   post:
- *     summary: Create a user
- *     description: Only admins can create other users.
- *     tags: [Users]
+ *     summary: Create a training
+ *     description: Only admins can create other trainings.
+ *     tags: [Trainings]
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -42,12 +42,12 @@ module.exports = router;
  *           schema:
  *             type: object
  *             required:
- *               - username
+ *               - trainingname
  *               - email
  *               - password
  *               - role
  *             properties:
- *               username:
+ *               trainingname:
  *                 type: string
  *               email:
  *                 type: string
@@ -60,19 +60,19 @@ module.exports = router;
  *                 description: At least one number and one letter
  *               role:
  *                  type: string
- *                  enum: [user, admin]
+ *                  enum: [training, admin]
  *             example:
- *               username: fake name
+ *               trainingname: fake name
  *               email: fake@example.com
  *               password: password1
- *               role: user
+ *               role: training
  *     responses:
  *       "201":
  *         description: Created
  *         content:
  *           application/json:
  *             schema:
- *                $ref: '#/components/schemas/User'
+ *                $ref: '#/components/schemas/Training'
  *       "400":
  *         $ref: '#/components/responses/DuplicateEmail'
  *       "401":
@@ -81,9 +81,9 @@ module.exports = router;
  *         $ref: '#/components/responses/Forbidden'
  *
  *   get:
- *     summary: Get all users
- *     description: Only admins can retrieve all users.
- *     tags: [Users]
+ *     summary: Get all trainings
+ *     description: Only admins can retrieve all trainings.
+ *     tags: [Trainings]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -91,12 +91,12 @@ module.exports = router;
  *         name: name
  *         schema:
  *           type: string
- *         description: User name
+ *         description: Training name
  *       - in: query
  *         name: role
  *         schema:
  *           type: string
- *         description: User role
+ *         description: Training role
  *       - in: query
  *         name: sortBy
  *         schema:
@@ -108,7 +108,7 @@ module.exports = router;
  *           type: integer
  *           minimum: 1
  *         default: 10
- *         description: Maximum number of users
+ *         description: Maximum number of trainings
  *       - in: query
  *         name: page
  *         schema:
@@ -127,7 +127,7 @@ module.exports = router;
  *                 results:
  *                   type: array
  *                   items:
- *                     $ref: '#/components/schemas/User'
+ *                     $ref: '#/components/schemas/Training'
  *                 page:
  *                   type: integer
  *                   example: 1
@@ -148,11 +148,11 @@ module.exports = router;
 
 /**
  * @swagger
- * /users/{id}:
+ * /trainings/{id}:
  *   get:
- *     summary: Get a user
- *     description: Logged in users can fetch only their own user information. Only admins can fetch other users.
- *     tags: [Users]
+ *     summary: Get a training
+ *     description: Logged in trainings can fetch only their own training information. Only admins can fetch other trainings.
+ *     tags: [Trainings]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -161,14 +161,14 @@ module.exports = router;
  *         required: true
  *         schema:
  *           type: string
- *         description: User id
+ *         description: Training id
  *     responses:
  *       "200":
  *         description: OK
  *         content:
  *           application/json:
  *             schema:
- *                $ref: '#/components/schemas/User'
+ *                $ref: '#/components/schemas/Training'
  *       "401":
  *         $ref: '#/components/responses/Unauthorized'
  *       "403":
@@ -177,9 +177,9 @@ module.exports = router;
  *         $ref: '#/components/responses/NotFound'
  *
  *   patch:
- *     summary: Update a user
- *     description: Logged in users can only update their own information. Only admins can update other users.
- *     tags: [Users]
+ *     summary: Update a training
+ *     description: Logged in trainings can only update their own information. Only admins can update other trainings.
+ *     tags: [Trainings]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -188,7 +188,7 @@ module.exports = router;
  *         required: true
  *         schema:
  *           type: string
- *         description: User id
+ *         description: Training id
  *     requestBody:
  *       required: true
  *       content:
@@ -217,7 +217,7 @@ module.exports = router;
  *         content:
  *           application/json:
  *             schema:
- *                $ref: '#/components/schemas/User'
+ *                $ref: '#/components/schemas/Training'
  *       "400":
  *         $ref: '#/components/responses/DuplicateEmail'
  *       "401":
@@ -228,9 +228,9 @@ module.exports = router;
  *         $ref: '#/components/responses/NotFound'
  *
  *   delete:
- *     summary: Delete a user
- *     description: Logged in users can delete only themselves. Only admins can delete other users.
- *     tags: [Users]
+ *     summary: Delete a training
+ *     description: Logged in trainings can delete only themselves. Only admins can delete other trainings.
+ *     tags: [Trainings]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -239,7 +239,7 @@ module.exports = router;
  *         required: true
  *         schema:
  *           type: string
- *         description: User id
+ *         description: Training id
  *     responses:
  *       "200":
  *         description: No content
