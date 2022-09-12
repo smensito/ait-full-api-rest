@@ -1,11 +1,25 @@
 const Joi = require('joi');
 const { objectId } = require('./custom.validation');
 
+const training = Joi.object().keys({
+  userId: Joi.string(),
+  isParticipate: Joi.boolean(),
+  nickname: Joi.string(),
+});
+
 const createTraining = {
   body: Joi.object().keys({
-    players: Joi.array(),
+    players: Joi.array().items(training),
     feedback: Joi.string().optional().allow(''),
     date: Joi.date().required(),
+  }),
+};
+
+const participateTraining = {
+  body: Joi.object().keys({
+    userId: Joi.string(),
+    nickname: Joi.string(),
+    isParticipate: Joi.boolean().required(),
   }),
 };
 
@@ -30,7 +44,13 @@ const updateTraining = {
   }),
   body: Joi.object()
     .keys({
-      players: Joi.array(),
+      players: [
+        {
+          userId: Joi.string(),
+          isParticipate: Joi.boolean(),
+          nickname: Joi.string(),
+        },
+      ],
       feedback: Joi.string().optional().allow(''),
       date: Joi.date().required(),
     })
@@ -45,6 +65,7 @@ const deleteTraining = {
 
 module.exports = {
   createTraining,
+  participateTraining,
   getTrainings,
   getTraining,
   updateTraining,

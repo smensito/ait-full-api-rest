@@ -1,7 +1,7 @@
 const httpStatus = require('http-status');
 const { Training } = require('../models');
 const ApiError = require('../utils/ApiError');
-// const logger = require('../config/logger');
+const logger = require('../config/logger');
 
 /**
  * Create new training
@@ -12,6 +12,7 @@ const createTraining = async (trainingBody) => {
   if (await Training.existsTraining(trainingBody.date)) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Training already exists for this day');
   }
+
   return Training.create(trainingBody);
 };
 
@@ -59,7 +60,31 @@ const updateTrainingById = async (trainingId, updateBody) => {
   }
 
   Object.assign(training, updateBody);
+
   await training.save();
+  return training;
+};
+
+/**
+ * Participate in an existing training
+ * @param {Object} trainingBody
+ * @returns {Promise<Training>}
+ */
+const participateTraining = async (participateParams, participateBody) => {
+  /*
+  if (await Training.isParticipating(participateParams.trainingId, participateBody.userId)) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'This player already participates in the training');
+  }
+  */
+  const { trainingId } = participateParams;
+
+  const training = await getTrainingById(trainingId);
+
+  training.players.push(participateBody);
+
+  Object.assign(training, participateBody);
+  await training.save();
+
   return training;
 };
 
@@ -73,12 +98,14 @@ const deleteTrainingById = async (trainingId) => {
   if (!training) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Training not found');
   }
+
   await training.remove();
   return training;
 };
 
 module.exports = {
   createTraining,
+  participateTraining,
   queryTrainings,
   getTrainingById,
   getLastTraining,

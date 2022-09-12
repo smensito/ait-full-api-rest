@@ -1,10 +1,9 @@
 const mongoose = require('mongoose');
 const { toJSON, paginate } = require('./plugins');
-
-const userId = mongoose.Types.ObjectId;
+const logger = require('../config/logger');
 
 const trainingSchema = mongoose.Schema({
-  players: [{ type: userId, ref: 'User' }],
+  players: [{ userId: { type: String }, nickname: { type: String }, isParticipate: { type: Boolean } }],
   feedback: {
     type: String,
     required: false,
@@ -25,6 +24,17 @@ const trainingSchema = mongoose.Schema({
 trainingSchema.statics.existsTraining = async function (date) {
   const training = await this.findOne({ date });
   return !!training;
+};
+
+/**
+ * Check if the player already participates in the training
+ * @param {string} userId - Player id
+ * @returns {Promise<boolean>}
+ */
+trainingSchema.statics.isParticipating = async function (trainingId, playerId) {
+  logger.info(playerId);
+  const isParticipate = await this.findOne({ id: trainingId });
+  return !!isParticipate;
 };
 
 // add plugin that converts mongoose to json

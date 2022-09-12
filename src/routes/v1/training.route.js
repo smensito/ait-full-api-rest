@@ -15,7 +15,12 @@ router
   .route('/:trainingId')
   .get(auth('getTrainings'), validate(trainingValidation.getTraining), trainingController.getTraining)
   .patch(auth('manageTrainings'), validate(trainingValidation.updateTraining), trainingController.updateTraining)
-  .delete(auth('manageTrainings'), validate(trainingValidation.deleteTraining), trainingController.deleteTraining);
+  .delete(auth('manageTrainings'), validate(trainingValidation.deleteTraining), trainingController.deleteTraining)
+  .post(
+    auth('playerParticipatesTraining'),
+    validate(trainingValidation.participateTraining),
+    trainingController.participateTraining
+  );
 
 module.exports = router;
 

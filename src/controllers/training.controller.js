@@ -3,12 +3,16 @@ const pick = require('../utils/pick');
 const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
 const { trainingService } = require('../services');
-const logger = require('../config/logger');
+// const logger = require('../config/logger');
 
 const createTraining = catchAsync(async (req, res) => {
-  logger.info(req.body);
   const training = await trainingService.createTraining(req.body);
   res.status(httpStatus.CREATED).send(training);
+});
+
+const participateTraining = catchAsync(async (req, res) => {
+  const player = await trainingService.participateTraining(req.params, req.body);
+  res.status(httpStatus.ACCEPTED).send(player);
 });
 
 const getTrainings = catchAsync(async (req, res) => {
@@ -38,6 +42,7 @@ const deleteTraining = catchAsync(async (req, res) => {
 
 module.exports = {
   createTraining,
+  participateTraining,
   getTrainings,
   getTraining,
   updateTraining,
