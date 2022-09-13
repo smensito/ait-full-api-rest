@@ -23,6 +23,13 @@ const participateTraining = {
   }),
 };
 
+const unsubscribeTraining = {
+  params: Joi.object().keys({
+    trainingId: Joi.string().custom(objectId),
+    userId: Joi.string().custom(objectId),
+  }),
+};
+
 const getTrainings = {
   query: Joi.object().keys({
     training: Joi.string(),
@@ -66,6 +73,7 @@ const deleteTraining = {
 module.exports = {
   createTraining,
   participateTraining,
+  unsubscribeTraining,
   getTrainings,
   getTraining,
   updateTraining,

@@ -1,6 +1,7 @@
 const httpStatus = require('http-status');
 const { Training } = require('../models');
 const ApiError = require('../utils/ApiError');
+const logger = require('../config/logger');
 
 /**
  * Create new training
@@ -88,6 +89,25 @@ const participateTraining = async (participateParams, participateBody) => {
 };
 
 /**
+ * Participate in an existing training
+ * @param {Object} trainingBody
+ * @returns {Promise<Training>}
+ */
+const unsubscribeTraining = async (unsubscribeParams) => {
+  const { userId, trainingId } = unsubscribeParams;
+
+  const training = await getTrainingById(trainingId);
+
+  training.players = training.players.filter((player) => {
+    return player.userId !== userId;
+  });
+
+  await training.save();
+
+  return training;
+};
+
+/**
  * Delete training by id
  * @param {ObjectId} trainingId
  * @returns {Promise<Training>}
@@ -105,6 +125,7 @@ const deleteTrainingById = async (trainingId) => {
 module.exports = {
   createTraining,
   participateTraining,
+  unsubscribeTraining,
   queryTrainings,
   getTrainingById,
   getLastTraining,

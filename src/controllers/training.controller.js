@@ -15,6 +15,11 @@ const participateTraining = catchAsync(async (req, res) => {
   res.status(httpStatus.ACCEPTED).send(player);
 });
 
+const unsubscribeTraining = catchAsync(async (req, res) => {
+  const player = await trainingService.unsubscribeTraining(req.params);
+  res.send(player);
+});
+
 const getTrainings = catchAsync(async (req, res) => {
   const filter = pick(req.query, ['date']);
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
@@ -43,6 +48,7 @@ const deleteTraining = catchAsync(async (req, res) => {
 module.exports = {
   createTraining,
   participateTraining,
+  unsubscribeTraining,
   getTrainings,
   getTraining,
   updateTraining,

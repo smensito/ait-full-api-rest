@@ -22,6 +22,14 @@ router
     trainingController.participateTraining
   );
 
+router
+  .route('/:trainingId/:userId')
+  .delete(
+    auth('unsubscribePlayerTraining'),
+    validate(trainingValidation.unsubscribeTraining),
+    trainingController.unsubscribeTraining
+  );
+
 module.exports = router;
 
 /**
