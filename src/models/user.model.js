@@ -4,6 +4,18 @@ const bcrypt = require('bcryptjs');
 const { toJSON, paginate } = require('./plugins');
 const { roles } = require('../config/roles');
 
+const addressInfoSchema = mongoose.Schema({
+  street: { type: String },
+  municipality: { type: String },
+  province: { type: String },
+  town: { type: String },
+  zipcode: { type: Number },
+});
+
+const userStatsSchema = mongoose.Schema({
+  numberTrainings: Number,
+});
+
 const userSchema = mongoose.Schema(
   {
     username: {
@@ -55,12 +67,9 @@ const userSchema = mongoose.Schema(
           required: false,
           trim: true,
         },
-        address: {
-          type: String,
-          required: false,
-          trim: true,
-        },
+        address: addressInfoSchema,
       },
+      stats: userStatsSchema,
       default: {
         basicInfo: {
           name: '',
