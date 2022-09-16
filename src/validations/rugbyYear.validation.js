@@ -1,10 +1,9 @@
 const Joi = require('joi');
-const seasonEnum = require('../utils/enums/seasonEnum');
-// const { objectId } = require('./custom.validation');
+const { objectId } = require('./custom.validation');
 
 const trainingsValidation = Joi.object().keys({
   trainingId: Joi.string(),
-  title: Joi.boolean(),
+  title: Joi.string(),
   date: Joi.date(),
 });
 
@@ -14,9 +13,9 @@ const seasonStatsValidation = Joi.object().keys({
 });
 
 const seasonValidation = Joi.object().keys({
-  seasonType: Joi.object(seasonEnum),
+  seasonType: Joi.string().valid('spring', 'summer', 'autumn', 'winter'),
   trainings: Joi.array().items(trainingsValidation),
-  statistics: Joi.object(seasonStatsValidation),
+  statistics: seasonStatsValidation,
 });
 
 const userValidation = Joi.object().keys({
@@ -31,28 +30,130 @@ const rugbyYearStatsValidation = Joi.object().keys({
   stars: Joi.number(),
 });
 
+const rugbyYearValidation = Joi.object().keys({
+  year: Joi.number(),
+  seasons: Joi.array().items(seasonValidation),
+  players: Joi.array().items(userValidation),
+  coaches: Joi.array().items(userValidation),
+  assistants: Joi.array().items(userValidation),
+  statistics: rugbyYearStatsValidation,
+});
+
 const createRugbyYear = {
-  body: Joi.object().keys({
-    seasons: Joi.array().items(seasonValidation),
-    players: Joi.array().items(userValidation),
-    coaches: Joi.array().items(userValidation),
-    assistants: Joi.array().items(userValidation),
-    statistics: Joi.object(rugbyYearStatsValidation),
+  body: rugbyYearValidation,
+};
+
+// Remove rugby year
+const removeRugbyYear = {
+  params: Joi.object().keys({
+    rugbyYearId: Joi.string().custom(objectId),
   }),
 };
 
-// Delete rugby year
-
 // upd rugby year
+const updateRugbyYear = {
+  params: Joi.object().keys({
+    rugbyYearId: Joi.required().custom(objectId),
+  }),
+  body: Joi.object()
+    .keys({
+      rugbyYear: rugbyYearValidation,
+    })
+    .min(1),
+};
 
-// add players
+// Add season
+const createSeason = {
+  params: Joi.object().keys({
+    rugbyYearId: Joi.required().custom(objectId),
+  }),
+  body: Joi.object().keys({
+    season: seasonValidation,
+  }),
+};
+
+// Get all seasons by rugby year id
+const getAllSeasonsByRugbyYearId = {
+  params: Joi.object().keys({
+    rugbyYearId: Joi.required().custom(objectId),
+  }),
+};
+
+// Get season by id
+const getSeasonById = {
+  params: Joi.object().keys({
+    seasonId: Joi.required().custom(objectId),
+  }),
+};
+
+// Remove season
+const removeSeasonById = {
+  params: Joi.object().keys({
+    seasonId: Joi.required().custom(objectId),
+  }),
+};
+
+// Upd Season
+const updSeasonById = {
+  params: Joi.object().keys({
+    seasonId: Joi.required().custom(objectId),
+  }),
+};
+
+// add players to season
+const addPlayersToSeason = {
+  params: Joi.object().keys({
+    seasonId: Joi.required().custom(objectId),
+  }),
+  body: Joi.object().keys({
+    players: [userValidation],
+  }),
+};
 
 // delete players
+/**
+ * Params: Season ID
+ * Body:
+ * players => [playerId: String]
+ */
+const removePlayersFromSeason = {
+  params: Joi.object().keys({
+    seasonId: Joi.required().custom(objectId),
+  }),
+  body: Joi.object().keys({
+    players: [Joi.required().custom(objectId)],
+  }),
+};
 
 // add training
+const addTrainingToSeason = {
+  params: Joi.object().keys({
+    seasonId: Joi.required().custom(objectId),
+  }),
+  body: Joi.object().keys({
+    training: trainingsValidation,
+  }),
+};
 
 // delete training
+const removeTrainingToSeason = {
+  params: Joi.object().keys({
+    seasonId: Joi.required().custom(objectId),
+    trainingId: Joi.required().custom(objectId),
+  }),
+};
 
 module.exports = {
   createRugbyYear,
+  removeRugbyYear,
+  updateRugbyYear,
+  createSeason,
+  getAllSeasonsByRugbyYearId,
+  getSeasonById,
+  removeSeasonById,
+  updSeasonById,
+  addPlayersToSeason,
+  removePlayersFromSeason,
+  addTrainingToSeason,
+  removeTrainingToSeason,
 };

@@ -1,18 +1,30 @@
 const Joi = require('joi');
 const { objectId } = require('./custom.validation');
 
-const training = Joi.object().keys({
+const playerValidation = Joi.object().keys({
   userId: Joi.string(),
-  isParticipate: Joi.boolean(),
   nickname: Joi.string(),
+  isParticipate: Joi.boolean(),
+  feedback: Joi.string(),
+  start: Joi.number(),
+});
+
+const statsValidation = Joi.object().keys({
+  numberPlayers: Joi.number(),
+  start: Joi.number(),
+});
+
+const trainingValidation = Joi.object().keys({
+  seasonId: Joi.string(),
+  players: Joi.array().items(playerValidation),
+  date: Joi.date(),
+  title: Joi.string(),
+  description: Joi.string(),
+  stats: statsValidation,
 });
 
 const createTraining = {
-  body: Joi.object().keys({
-    players: Joi.array().items(training),
-    feedback: Joi.string().optional().allow(''),
-    date: Joi.date().required(),
-  }),
+  body: trainingValidation,
 };
 
 const participateTraining = {

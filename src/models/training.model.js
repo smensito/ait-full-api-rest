@@ -2,32 +2,42 @@ const mongoose = require('mongoose');
 const { toJSON, paginate } = require('./plugins');
 const logger = require('../config/logger');
 
-const trainingStatsSchema = mongoose.schema({
+const statsSchema = mongoose.Schema({
   numberPlayers: { type: Number },
   stars: { type: Number },
 });
 
-const playerInTrainingSchema = mongoose.schema({
+const playerInTrainingSchema = mongoose.Schema({
   userId: { type: String },
   nickname: { type: String },
   isParticipate: { type: Boolean },
   feedback: { type: String },
   stars: { type: Number },
-  stats: trainingStatsSchema,
 });
 
 const trainingSchema = mongoose.Schema({
-  players: [playerInTrainingSchema],
-  description: {
+  seasonId: {
     type: String,
     required: false,
     trim: true,
   },
+  players: [playerInTrainingSchema],
   date: {
     type: Date,
     required: true,
     trim: true,
   },
+  title: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+  description: {
+    type: String,
+    required: false,
+    trim: true,
+  },
+  stats: statsSchema,
 });
 
 /**

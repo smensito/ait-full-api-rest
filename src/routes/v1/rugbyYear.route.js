@@ -2,13 +2,15 @@ const express = require('express');
 const auth = require('../../middlewares/auth');
 const validate = require('../../middlewares/validate');
 const trainingValidation = require('../../validations/training.validation');
+const rugbyYearValidation = require('../../validations/rugbyYear.validation');
 const trainingController = require('../../controllers/training.controller');
+const rugbyYearController = require('../../controllers/rugbyYear.controller');
 
 const router = express.Router();
 
 router
   .route('/')
-  .post(auth('manageRugbyYear'), validate(trainingValidation.createTraining), trainingController.createTraining)
+  .post(auth('manageRugbyYear'), validate(rugbyYearValidation.createRugbyYear), rugbyYearController.createRugbyYear)
   .get(auth('getRugbyYears'), validate(trainingValidation.getTrainings), trainingController.getTrainings);
 
 router
