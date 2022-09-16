@@ -1,36 +1,12 @@
 const express = require('express');
 const auth = require('../../middlewares/auth');
 const validate = require('../../middlewares/validate');
-const trainingValidation = require('../../validations/training.validation');
-const rugbyYearValidation = require('../../validations/rugbyYear.validation');
-const trainingController = require('../../controllers/training.controller');
-const rugbyYearController = require('../../controllers/rugbyYear.controller');
+const clubValidation = require('../../validations/club.validation');
+const clubController = require('../../controllers/club.controller');
 
 const router = express.Router();
 
-router
-  .route('/')
-  .post(auth('manageRugbyYear'), validate(rugbyYearValidation.createRugbyYear), rugbyYearController.createRugbyYear)
-  .get(auth('getRugbyYears'), validate(rugbyYearValidation.getTrainings), trainingController.getTrainings);
-
-router
-  .route('/:yearId')
-  .get(auth('getRugbyYear'), validate(trainingValidation.getTraining), trainingController.getTraining)
-  .patch(auth('manageRugbyYear'), validate(trainingValidation.updateTraining), trainingController.updateTraining)
-  .delete(auth('manageRugbyYear'), validate(trainingValidation.deleteTraining), trainingController.deleteTraining)
-  .post(
-    auth('playerParticipatesTraining'),
-    validate(trainingValidation.participateTraining),
-    trainingController.participateTraining
-  );
-
-router
-  .route('/:trainingId/:userId')
-  .delete(
-    auth('unsubscribePlayerTraining'),
-    validate(trainingValidation.unsubscribeTraining),
-    trainingController.unsubscribeTraining
-  );
+router.route('/').post(auth('manageClub'), validate(clubValidation.createClub), clubController.createClub);
 
 module.exports = router;
 

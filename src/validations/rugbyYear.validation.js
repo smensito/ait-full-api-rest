@@ -31,7 +31,7 @@ const rugbyYearStatsValidation = Joi.object().keys({
 });
 
 const rugbyYearValidation = Joi.object().keys({
-  year: Joi.number(),
+  year: Joi.number().required(),
   seasons: Joi.array().items(seasonValidation),
   players: Joi.array().items(userValidation),
   coaches: Joi.array().items(userValidation),
@@ -42,6 +42,14 @@ const rugbyYearValidation = Joi.object().keys({
 const createRugbyYear = {
   body: rugbyYearValidation,
 };
+
+/*
+const getAllRugbyYears = {
+  params: Joi.object().keys({
+
+  })
+}
+*/
 
 // Remove rugby year
 const removeRugbyYear = {

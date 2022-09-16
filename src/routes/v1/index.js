@@ -3,6 +3,7 @@ const authRoute = require('./auth.route');
 const userRoute = require('./user.route');
 const trainingRoute = require('./training.route');
 const rugbyYearRoute = require('./rugbyYear.route');
+const clubRoute = require('./club.route');
 const docsRoute = require('./docs.route');
 const config = require('../../config/config');
 
@@ -24,6 +25,10 @@ const defaultRoutes = [
   {
     path: '/rugby-year',
     route: rugbyYearRoute,
+  },
+  {
+    path: '/club',
+    route: clubRoute,
   },
 ];
 

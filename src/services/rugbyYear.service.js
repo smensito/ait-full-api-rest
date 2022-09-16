@@ -2,13 +2,17 @@ const httpStatus = require('http-status');
 const { RugbyYear, Training } = require('../models');
 const ApiError = require('../utils/ApiError');
 
+const logger = require('../config/logger');
+
 /**
  * Create new training
  * @param {Object} trainingBody
  * @returns {Promise<Training>}
  */
 const createRugbyYear = async (rugbyYearBody) => {
-  if (await RugbyYear.existsRugbyYear(rugbyYearBody.date)) {
+  logger.info(JSON.stringify(rugbyYearBody));
+
+  if (await RugbyYear.existsRugbyYear(rugbyYearBody.year)) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Rugby year already exists');
   }
 

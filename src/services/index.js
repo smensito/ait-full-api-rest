@@ -4,3 +4,4 @@ module.exports.tokenService = require('./token.service');
 module.exports.userService = require('./user.service');
 module.exports.trainingService = require('./training.service');
 module.exports.rugbyYearService = require('./rugbyYear.service');
+module.exports.clubService = require('./club.service');
