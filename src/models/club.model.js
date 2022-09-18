@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 const { toJSON, paginate } = require('./plugins');
+// const logger = require('../config/logger');
 
 const basicInfoSchema = mongoose.Schema({
   name: { type: String },
@@ -24,8 +25,9 @@ const clubSchema = mongoose.Schema({
  * @param {ObjectId} [excludeUserId] - The id of the user to be excluded
  * @returns {Promise<boolean>}
  */
-clubSchema.statics.isClubTaken = async function (name, excludeClubId) {
-  const club = await this.findOne({ name, _id: { $ne: excludeClubId } });
+clubSchema.statics.isClubTaken = async function (basicInfo, excludeClubId) {
+  const { name } = basicInfo;
+  const club = await this.findOne({ 'basicInfo.name': name, _id: { $ne: excludeClubId } });
   return !!club;
 };
 

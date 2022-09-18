@@ -12,7 +12,8 @@ const logger = require('../config/logger');
 const createClub = async (clubBody) => {
   logger.info(JSON.stringify(clubBody));
   const { basicInfo } = clubBody;
-  if (await Club.isClubTaken(basicInfo.name)) {
+
+  if (await Club.isClubTaken(basicInfo)) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Club already exists');
   }
 
