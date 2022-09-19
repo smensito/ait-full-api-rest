@@ -109,7 +109,7 @@ const participateTraining = async (participateParams, participateBody) => {
 };
 
 /**
- * Participate in an existing training
+ * Unsubscribe from an existing training
  * @param {Object} trainingBody
  * @returns {Promise<Training>}
  */
@@ -118,10 +118,17 @@ const unsubscribeTraining = async (unsubscribeParams) => {
 
   const training = await getTrainingById(trainingId);
 
-  training.players = training.players.filter((player) => {
-    return player.userId !== userId;
+  const player = await userService.getUserById(userId);
+
+  training.players = training.players.filter((p) => {
+    return p.userId !== userId;
   });
 
+  player.trainingAttendance = player.trainingAttendance.filter((t) => {
+    return t.trainingId !== trainingId;
+  });
+
+  await player.save();
   await training.save();
 
   return training;
