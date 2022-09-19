@@ -1,5 +1,6 @@
 const httpStatus = require('http-status');
 const { Training } = require('../models');
+const { userService } = require('./index');
 const ApiError = require('../utils/ApiError');
 const logger = require('../config/logger');
 
@@ -85,10 +86,24 @@ const participateTraining = async (participateParams, participateBody) => {
     throw new ApiError(httpStatus.BAD_REQUEST, 'This player already participates in the training');
   }
 
+  // Insert in training array
   training.players.push(participateBody);
-
   Object.assign(training, participateBody);
+
+  // Update user list of joined trainings
+  const { userId } = participateBody;
+  const player = await userService.getUserById(userId);
+
+  const trainingAttendance = {
+    trainingId,
+    title: training.title,
+    date: training.date,
+  };
+
+  player.trainingAttendance.push(trainingAttendance);
+
   await training.save();
+  await player.save();
 
   return training;
 };

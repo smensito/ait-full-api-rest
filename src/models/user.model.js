@@ -4,17 +4,32 @@ const bcrypt = require('bcryptjs');
 const { toJSON, paginate } = require('./plugins');
 const { roles } = require('../config/roles');
 
-const addressInfoSchema = mongoose.Schema({
-  street: { type: String },
-  municipality: { type: String },
-  province: { type: String },
-  town: { type: String },
-  zipcode: { type: Number },
-});
+const addressInfoSchema = mongoose.Schema(
+  {
+    street: { type: String },
+    municipality: { type: String },
+    province: { type: String },
+    town: { type: String },
+    zipcode: { type: Number },
+  },
+  { _id: false }
+);
 
-const userStatsSchema = mongoose.Schema({
-  numberTrainings: Number,
-});
+const userStatsSchema = mongoose.Schema(
+  {
+    numberTrainings: Number,
+  },
+  { _id: false }
+);
+
+const trainingAttendanceSchema = mongoose.Schema(
+  {
+    trainingId: { type: String },
+    title: { type: String },
+    date: { type: String },
+  },
+  { _id: false }
+);
 
 const userSchema = mongoose.Schema(
   {
@@ -83,6 +98,7 @@ const userSchema = mongoose.Schema(
         },
       },
     },
+    trainingAttendance: [trainingAttendanceSchema],
   },
   {
     timestamps: true,

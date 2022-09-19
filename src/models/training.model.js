@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const { toJSON, paginate } = require('./plugins');
-const logger = require('../config/logger');
+// const logger = require('../config/logger');
 
 const statsSchema = mongoose.Schema({
   numberPlayers: { type: Number },
@@ -73,16 +73,13 @@ trainingSchema.statics.isParticipating = async function (training, playerId) {
   const { players } = training;
 
   const isFound = players.some((player) => {
-    if (player.id === playerId) {
-      logger.info('true');
+    if (player.userId === playerId) {
       return true;
     }
-    logger.info('false');
 
     return false;
   });
 
-  // const isParticipate = await this.findOne({ id: trainingId });
   return isFound;
 };
 
