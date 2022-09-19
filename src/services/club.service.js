@@ -6,6 +6,20 @@ const ApiError = require('../utils/ApiError');
 const logger = require('../config/logger');
 
 /**
+ * Get club by id
+ * @param {ObjectId} id
+ * @returns {Promise<Training>}
+ */
+const getClubById = async (id) => {
+  const club = Club.findById(id);
+
+  if (!club) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Club not found');
+  }
+  return club;
+};
+
+/**
  * Create new club
  * @param {Object} clubBody
  * @returns {Promise<Club>}
@@ -18,6 +32,21 @@ const createClub = async (clubBody) => {
   }
 
   return Club.create(clubBody);
+};
+
+/**
+ * Update club by ID
+ * @param {Object} clubId
+ * @body {Object} clubBody
+ * @returns {Promise<Club>}
+ */
+const updateClubById = async (clubId, clubBody) => {
+  const club = await getClubById(clubId);
+
+  Object.assign(club, clubBody);
+  await club.save();
+
+  return club;
 };
 
 /**
@@ -53,6 +82,7 @@ const removeClubById = async (id) => {
 
 module.exports = {
   createClub,
+  updateClubById,
   removeClubById,
   queryClubs,
 };

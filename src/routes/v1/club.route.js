@@ -11,7 +11,10 @@ router
   .post(auth('manageClub'), validate(clubValidation.createClub), clubController.createClub)
   .get(auth('getClubs'), validate(clubValidation.getClubs), clubController.getClubs);
 
-router.route('/:clubId').delete(auth('removeClub'), validate(clubValidation.removeClub), clubController.removeClubById);
+router
+  .route('/:clubId')
+  .delete(auth('removeClub'), validate(clubValidation.removeClub), clubController.removeClubById)
+  .patch(auth('updateClub'), validate(clubValidation.updateClub), clubController.updateClubById);
 
 module.exports = router;
 

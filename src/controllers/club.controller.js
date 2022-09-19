@@ -17,6 +17,13 @@ const createClub = catchAsync(async (req, res) => {
   res.status(httpStatus.CREATED).send(club);
 });
 
+const updateClubById = catchAsync(async (req, res) => {
+  const { clubId } = req.params;
+
+  const club = await clubService.updateClubById(clubId, req.body);
+  res.send(club);
+});
+
 const removeClubById = catchAsync(async (req, res) => {
   const { clubId } = req.params;
   await clubService.removeClubById(clubId);
@@ -26,5 +33,6 @@ const removeClubById = catchAsync(async (req, res) => {
 module.exports = {
   getClubs,
   createClub,
+  updateClubById,
   removeClubById,
 };
