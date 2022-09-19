@@ -26,6 +26,12 @@ const getClubs = {
   }),
 };
 
+const getClub = {
+  params: Joi.object().keys({
+    clubId: Joi.string().custom(objectId),
+  }),
+};
+
 const createClub = {
   body: clubValidation,
 };
@@ -44,6 +50,7 @@ const removeClub = {
 };
 
 module.exports = {
+  getClub,
   getClubs,
   createClub,
   updateClub,

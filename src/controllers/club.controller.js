@@ -1,9 +1,17 @@
 const httpStatus = require('http-status');
 const pick = require('../utils/pick');
-// const ApiError = require('../utils/ApiError');
+const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
 const { clubService } = require('../services');
 const logger = require('../config/logger');
+
+const getClubById = catchAsync(async (req, res) => {
+  const club = await clubService.getClubById(req.params.clubId);
+  if (!club) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Club not found');
+  }
+  res.send(club);
+});
 
 const getClubs = catchAsync(async (req, res) => {
   const filter = pick(req.query, ['basicInfo.createdDate']);
@@ -31,6 +39,7 @@ const removeClubById = catchAsync(async (req, res) => {
 });
 
 module.exports = {
+  getClubById,
   getClubs,
   createClub,
   updateClubById,

@@ -13,6 +13,7 @@ router
 
 router
   .route('/:clubId')
+  .get(auth('getClub'), validate(clubValidation.getClub), clubController.getClubById)
   .delete(auth('removeClub'), validate(clubValidation.removeClub), clubController.removeClubById)
   .patch(auth('updateClub'), validate(clubValidation.updateClub), clubController.updateClubById);
 

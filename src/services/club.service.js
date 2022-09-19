@@ -81,6 +81,7 @@ const removeClubById = async (id) => {
 };
 
 module.exports = {
+  getClubById,
   createClub,
   updateClubById,
   removeClubById,
