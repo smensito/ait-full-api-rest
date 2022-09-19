@@ -69,8 +69,6 @@ const queryClubs = async (filter, options) => {
  * @returns {Promise<Club>}
  */
 const removeClubById = async (id) => {
-  logger.info(id);
-
   if (await !Club.isExists(id)) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Club does not exists');
   }

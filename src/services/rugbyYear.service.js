@@ -10,8 +10,6 @@ const logger = require('../config/logger');
  * @returns {Promise<Training>}
  */
 const createRugbyYear = async (rugbyYearBody) => {
-  logger.info(JSON.stringify(rugbyYearBody));
-
   if (await RugbyYear.existsRugbyYear(rugbyYearBody.year)) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Rugby year already exists');
   }

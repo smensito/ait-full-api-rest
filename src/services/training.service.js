@@ -1,6 +1,7 @@
 const httpStatus = require('http-status');
 const { Training } = require('../models');
 const ApiError = require('../utils/ApiError');
+const logger = require('../config/logger');
 
 /**
  * Create new training
@@ -8,7 +9,7 @@ const ApiError = require('../utils/ApiError');
  * @returns {Promise<Training>}
  */
 const createTraining = async (trainingBody) => {
-  if (await Training.existsTraining(trainingBody.date)) {
+  if (await Training.existsTrainingByDate(trainingBody.date)) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Training already exists for this day');
   }
 
@@ -35,7 +36,12 @@ const queryTrainings = async (filter, options) => {
  * @returns {Promise<Training>}
  */
 const getTrainingById = async (id) => {
-  return Training.findById(id);
+  const training = await Training.findById(id);
+
+  if (!training) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Training not found');
+  }
+  return training;
 };
 
 /**
@@ -54,9 +60,6 @@ const getLastTraining = async () => {
  */
 const updateTrainingById = async (trainingId, updateBody) => {
   const training = await getTrainingById(trainingId);
-  if (!training) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Training not found');
-  }
 
   Object.assign(training, updateBody);
 
@@ -66,18 +69,21 @@ const updateTrainingById = async (trainingId, updateBody) => {
 
 /**
  * Participate in an existing training
+ * Insert player in players list. And update the trainings where the player participates
  * @param {Object} trainingBody
  * @returns {Promise<Training>}
  */
 const participateTraining = async (participateParams, participateBody) => {
-  /*
-  if (await Training.isParticipating(participateParams.trainingId, participateBody.userId)) {
+  if (await !Training.existsTraining(participateParams.trainingId)) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Training does not exists');
+  }
+
+  const { trainingId } = participateParams;
+  const training = await getTrainingById(trainingId);
+
+  if (await Training.isParticipating(training, participateBody.userId)) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'This player already participates in the training');
   }
-  */
-  const { trainingId } = participateParams;
-
-  const training = await getTrainingById(trainingId);
 
   training.players.push(participateBody);
 

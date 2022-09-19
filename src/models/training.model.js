@@ -7,14 +7,18 @@ const statsSchema = mongoose.Schema({
   stars: { type: Number },
 });
 
-const playerInTrainingSchema = mongoose.Schema({
-  userId: { type: String },
-  nickname: { type: String },
-  isParticipate: { type: Boolean },
-  feedback: { type: String },
-  stars: { type: Number },
-});
+const playerInTrainingSchema = mongoose.Schema(
+  {
+    userId: { type: String },
+    nickname: { type: String },
+    isParticipate: { type: Boolean },
+    feedback: { type: String },
+    stars: { type: Number },
+  },
+  { _id: false }
+);
 
+// TODO: Añadir required true a season ID
 const trainingSchema = mongoose.Schema({
   seasonId: {
     type: String,
@@ -41,11 +45,21 @@ const trainingSchema = mongoose.Schema({
 });
 
 /**
+ * Check if training already exists by ID
+ * @param {string} trainingId - Training ID
+ * @returns {Promise<boolean>}
+ */
+trainingSchema.statics.existsTraining = async function (trainingId) {
+  const training = await this.findOne({ _id: trainingId });
+  return !!training;
+};
+
+/**
  * Check if training already exists by date
  * @param {Date} date - Training day
  * @returns {Promise<boolean>}
  */
-trainingSchema.statics.existsTraining = async function (date) {
+trainingSchema.statics.existsTrainingByDate = async function (date) {
   const training = await this.findOne({ date });
   return !!training;
 };
@@ -55,10 +69,21 @@ trainingSchema.statics.existsTraining = async function (date) {
  * @param {string} userId - Player id
  * @returns {Promise<boolean>}
  */
-trainingSchema.statics.isParticipating = async function (trainingId, playerId) {
-  logger.info(playerId);
-  const isParticipate = await this.findOne({ id: trainingId });
-  return !!isParticipate;
+trainingSchema.statics.isParticipating = async function (training, playerId) {
+  const { players } = training;
+
+  const isFound = players.some((player) => {
+    if (player.id === playerId) {
+      logger.info('true');
+      return true;
+    }
+    logger.info('false');
+
+    return false;
+  });
+
+  // const isParticipate = await this.findOne({ id: trainingId });
+  return isFound;
 };
 
 // add plugin that converts mongoose to json
