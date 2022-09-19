@@ -17,10 +17,27 @@ const clubValidation = Joi.object().keys({
   years: Joi.array().items(rugbyYearInClub),
 });
 
+const getClubs = {
+  query: Joi.object().keys({
+    club: Joi.string(),
+    sortBy: Joi.string(),
+    limit: Joi.number().integer(),
+    page: Joi.number().integer(),
+  }),
+};
+
 const createClub = {
   body: clubValidation,
 };
 
+const removeClub = {
+  params: Joi.object().keys({
+    clubId: Joi.string().custom(objectId),
+  }),
+};
+
 module.exports = {
+  getClubs,
   createClub,
+  removeClub,
 };

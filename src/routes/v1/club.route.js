@@ -6,7 +6,12 @@ const clubController = require('../../controllers/club.controller');
 
 const router = express.Router();
 
-router.route('/').post(auth('manageClub'), validate(clubValidation.createClub), clubController.createClub);
+router
+  .route('/')
+  .post(auth('manageClub'), validate(clubValidation.createClub), clubController.createClub)
+  .get(auth('getClubs'), validate(clubValidation.getClubs), clubController.getClubs);
+
+router.route('/:clubId').delete(auth('removeClub'), validate(clubValidation.removeClub), clubController.removeClubById);
 
 module.exports = router;
 

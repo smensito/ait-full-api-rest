@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const { toJSON, paginate } = require('./plugins');
-// const logger = require('../config/logger');
+const logger = require('../config/logger');
 
 const basicInfoSchema = mongoose.Schema({
   name: { type: String },
@@ -28,6 +28,17 @@ const clubSchema = mongoose.Schema({
 clubSchema.statics.isClubTaken = async function (basicInfo, excludeClubId) {
   const { name } = basicInfo;
   const club = await this.findOne({ 'basicInfo.name': name, _id: { $ne: excludeClubId } });
+  return !!club;
+};
+
+/**
+ * Check if club exists
+ * @param {string} email - The user's email
+ * @param {ObjectId} [excludeUserId] - The id of the user to be excluded
+ * @returns {Promise<boolean>}
+ */
+clubSchema.statics.isExists = async function (id) {
+  const club = await this.findById(id);
   return !!club;
 };
 
