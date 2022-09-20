@@ -2,7 +2,7 @@ const httpStatus = require('http-status');
 const { Training } = require('../models');
 const { userService } = require('./index');
 const ApiError = require('../utils/ApiError');
-const logger = require('../config/logger');
+// const logger = require('../config/logger');
 
 /**
  * Create new training
