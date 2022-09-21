@@ -2,7 +2,6 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
 const { toJSON, paginate } = require('./plugins');
-const { roles } = require('../config/roles');
 
 const addressInfoSchema = mongoose.Schema(
   {
@@ -62,11 +61,7 @@ const userSchema = mongoose.Schema(
       },
       private: true, // used by the toJSON plugin
     },
-    role: {
-      type: String,
-      enum: roles,
-      default: roles.player,
-    },
+    role: { type: String, required: true },
     isEmailVerified: {
       type: Boolean,
       default: false,
