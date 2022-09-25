@@ -13,9 +13,9 @@ router
 
 router
   .route('/:trainingId')
-  .get(auth('getTrainings'), validate(trainingValidation.getTraining), trainingController.getTraining)
-  .patch(auth('manageTrainings'), validate(trainingValidation.updateTraining), trainingController.updateTraining)
-  .delete(auth('manageTrainings'), validate(trainingValidation.deleteTraining), trainingController.deleteTraining)
+  .get(auth('getTraining'), validate(trainingValidation.getTraining), trainingController.getTraining)
+  .patch(auth('manageTraining'), validate(trainingValidation.updateTraining), trainingController.updateTraining)
+  .delete(auth('deleteTraining'), validate(trainingValidation.deleteTraining), trainingController.deleteTraining)
   .post(
     auth('playerParticipatesTraining'),
     validate(trainingValidation.participateTraining),

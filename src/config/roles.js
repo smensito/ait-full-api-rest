@@ -2,9 +2,33 @@
 // Esto se consigue a través del nombre seleccionado en routes
 
 const allRoles = {
-  player: [],
-  assistant: [],
-  coach: [],
+  player: [
+    'manageTraining',
+    'getTraining',
+    'getTrainings',
+    'manageTrainings',
+    'deleteTraining',
+    'playerParticipatesTraining',
+    'unsubscribePlayerTraining',
+  ],
+  assistant: [
+    'manageTraining',
+    'getTraining',
+    'getTrainings',
+    'manageTrainings',
+    'deleteTraining',
+    'playerParticipatesTraining',
+    'unsubscribePlayerTraining',
+  ],
+  coach: [
+    'manageTraining',
+    'getTraining',
+    'getTrainings',
+    'manageTrainings',
+    'deleteTraining',
+    'playerParticipatesTraining',
+    'unsubscribePlayerTraining',
+  ],
   user: [],
   admin: ['getUsers', 'manageUsers'],
 };
