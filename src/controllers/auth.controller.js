@@ -1,28 +1,57 @@
 const httpStatus = require('http-status');
 const catchAsync = require('../utils/catchAsync');
 const { authService, userService, tokenService, emailService } = require('../services');
+const logger = require('../config/logger');
 
 const register = catchAsync(async (req, res) => {
   const user = await userService.createUser(req.body);
   const tokens = await tokenService.generateAuthTokens(user);
-  res.status(httpStatus.CREATED).send({ user, tokens });
+
+  // Creates Secure Cookie with refresh token
+  const refreshToken = tokens.refresh;
+  res.status(httpStatus.CREATED).send(
+    { user, tokens }.cookie('jwt', refreshToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'strict',
+      maxAge: 24 * 60 * 60 * 1000,
+    })
+  );
 });
 
 const login = catchAsync(async (req, res) => {
   const { username, password } = req.body;
   const user = await authService.loginUserWithUsernameAndPassword(username, password);
   const tokens = await tokenService.generateAuthTokens(user);
-  res.send({ user, tokens });
+
+  // Creates Secure Cookie with refresh token
+  const refreshToken = tokens.refresh;
+  logger.info(JSON.stringify(refreshToken));
+
+  res
+    .cookie('jwt', refreshToken, { httpOnly: true, secure: true, sameSite: 'strict', maxAge: 24 * 60 * 60 * 1000 })
+    .send({ user, tokens });
 });
 
 const logout = catchAsync(async (req, res) => {
   await authService.logout(req.body.refreshToken);
-  res.status(httpStatus.NO_CONTENT).send();
+  res.clearCookie('jwt').status(httpStatus.NO_CONTENT).send();
 });
 
 const refreshTokens = catchAsync(async (req, res) => {
-  const tokens = await authService.refreshAuth(req.body.refreshToken);
-  res.send({ ...tokens });
+  // Get token from Secure Cookie
+  const { cookies } = req;
+  logger.info(JSON.stringify(cookies));
+  if (cookies !== undefined || !cookies || !cookies.jwt) return res.sendStatus(401);
+  const refreshToken = cookies.jwt;
+
+  const tokens = await authService.refreshAuth(refreshToken);
+
+  // Creates Secure Cookie with refresh token
+  const refreshTokenNew = tokens.refresh;
+  res
+    .send({ ...tokens })
+    .cookie('jwt', refreshTokenNew, { httpOnly: true, secure: true, sameSite: 'strict', maxAge: 24 * 60 * 60 * 1000 });
 });
 
 const forgotPassword = catchAsync(async (req, res) => {
