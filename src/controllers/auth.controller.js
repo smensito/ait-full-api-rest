@@ -1,7 +1,7 @@
 const httpStatus = require('http-status');
 const catchAsync = require('../utils/catchAsync');
 const { authService, userService, tokenService, emailService } = require('../services');
-// const logger = require('../config/logger');
+const logger = require('../config/logger');
 
 const register = catchAsync(async (req, res) => {
   const user = await userService.createUser(req.body);
@@ -9,13 +9,21 @@ const register = catchAsync(async (req, res) => {
 
   // Creates Secure Cookie with refresh token
   const refreshToken = tokens.refresh;
+  const accessToken = tokens.access;
   res.status(httpStatus.CREATED).send(
-    { user, tokens }.cookie('jwt', refreshToken, {
-      httpOnly: true,
-      secure: true,
-      sameSite: 'strict',
-      maxAge: 24 * 60 * 60 * 1000,
-    })
+    { user, tokens }
+      .cookie('refresh_wt', refreshToken, {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'strict',
+        maxAge: 24 * 60 * 60 * 1000,
+      })
+      .cookie('access_jwt', accessToken, {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'strict',
+        maxAge: 24 * 60 * 60 * 1000,
+      })
   );
 });
 
@@ -25,32 +33,42 @@ const login = catchAsync(async (req, res) => {
   const tokens = await tokenService.generateAuthTokens(user);
 
   // Creates Secure Cookie with refresh token
+  const accessToken = tokens.access;
   const refreshToken = tokens.refresh;
 
   res
-    .cookie('jwt', refreshToken, { httpOnly: true, secure: true, sameSite: 'strict', maxAge: 24 * 60 * 60 * 1000 })
+    .cookie('refresh_wt', refreshToken, { httpOnly: true, secure: true, sameSite: 'strict', maxAge: 24 * 60 * 60 * 1000 })
+    .cookie('access_jwt', accessToken, { httpOnly: true, secure: true, sameSite: 'strict', maxAge: 24 * 60 * 60 * 1000 })
     .send({ user, tokens });
 });
 
 const logout = catchAsync(async (req, res) => {
   await authService.logout(req.body.refreshToken);
-  res.clearCookie('jwt').status(httpStatus.NO_CONTENT).send();
+  res.clearCookie('refresh_wt').status(httpStatus.NO_CONTENT).send();
+  res.clearCookie('access_jwt').status(httpStatus.NO_CONTENT).send();
 });
 
 const refreshTokens = catchAsync(async (req, res) => {
   // Get token from Secure Cookie
   const { cookies } = req;
-
   if (cookies === undefined || !cookies) return res.sendStatus(401);
-  const refreshToken = cookies.jwt.token;
-
+  const refreshToken = cookies.refresh_wt.token;
   const tokens = await authService.refreshAuth(refreshToken);
 
+  logger.info(JSON.stringify(tokens));
+
   // Creates Secure Cookie with refresh token
+  const accessTokenNew = tokens.access;
   const refreshTokenNew = tokens.refresh;
   res
-    .send({ ...tokens })
-    .cookie('jwt', refreshTokenNew, { httpOnly: true, secure: true, sameSite: 'strict', maxAge: 24 * 60 * 60 * 1000 });
+    .cookie('access_jwt', accessTokenNew, { httpOnly: true, secure: true, sameSite: 'strict', maxAge: 24 * 60 * 60 * 1000 })
+    .cookie('refresh_wt', refreshTokenNew, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'strict',
+      maxAge: 24 * 60 * 60 * 1000,
+    })
+    .send({ ...tokens });
 });
 
 const forgotPassword = catchAsync(async (req, res) => {
