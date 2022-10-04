@@ -12,7 +12,7 @@ const register = catchAsync(async (req, res) => {
   const accessToken = tokens.access;
   res.status(httpStatus.CREATED).send(
     { user, tokens }
-      .cookie('refresh_wt', refreshToken, {
+      .cookie('refresh_jwt', refreshToken, {
         httpOnly: true,
         secure: true,
         sameSite: 'strict',
@@ -37,32 +37,32 @@ const login = catchAsync(async (req, res) => {
   const refreshToken = tokens.refresh;
 
   res
-    .cookie('refresh_wt', refreshToken, { httpOnly: true, secure: true, sameSite: 'strict', maxAge: 24 * 60 * 60 * 1000 })
+    .cookie('refresh_jwt', refreshToken, { httpOnly: true, secure: true, sameSite: 'strict', maxAge: 24 * 60 * 60 * 1000 })
     .cookie('access_jwt', accessToken, { httpOnly: true, secure: true, sameSite: 'strict', maxAge: 24 * 60 * 60 * 1000 })
     .send({ user, tokens });
 });
 
 const logout = catchAsync(async (req, res) => {
-  await authService.logout(req.body.refreshToken);
-  res.clearCookie('refresh_wt').status(httpStatus.NO_CONTENT).send();
-  res.clearCookie('access_jwt').status(httpStatus.NO_CONTENT).send();
+  // Get token from Secure Cookie
+  const { cookies } = req;
+  const refreshToken = cookies.refresh_jwt.token;
+  await authService.logout(refreshToken);
+  res.clearCookie('refresh_jwt').clearCookie('access_jwt').status(httpStatus.NO_CONTENT).send();
 });
 
 const refreshTokens = catchAsync(async (req, res) => {
   // Get token from Secure Cookie
   const { cookies } = req;
   if (cookies === undefined || !cookies) return res.sendStatus(401);
-  const refreshToken = cookies.refresh_wt.token;
+  const refreshToken = cookies.refresh_jwt.token;
   const tokens = await authService.refreshAuth(refreshToken);
-
-  logger.info(JSON.stringify(tokens));
 
   // Creates Secure Cookie with refresh token
   const accessTokenNew = tokens.access;
   const refreshTokenNew = tokens.refresh;
   res
     .cookie('access_jwt', accessTokenNew, { httpOnly: true, secure: true, sameSite: 'strict', maxAge: 24 * 60 * 60 * 1000 })
-    .cookie('refresh_wt', refreshTokenNew, {
+    .cookie('refresh_jwt', refreshTokenNew, {
       httpOnly: true,
       secure: true,
       sameSite: 'strict',
